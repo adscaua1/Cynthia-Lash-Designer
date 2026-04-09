@@ -1,0 +1,285 @@
+/* RESET SAFARI */
+* {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #1a1a1a, #2a1f2d);
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.app {
+    max-width: 420px;
+    margin: auto;
+    padding: 15px;
+}
+
+/* TITULOS */
+h1 {
+    text-align: center;
+    color: #ffb6c1;
+}
+
+.user {
+    text-align: center;
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+.destaque {
+    text-align: center;
+    color: #ffb6c1;
+    font-weight: bold;
+}
+
+/* CARD PADRÃO */
+.card {
+    background: #2a1f2d;
+    padding: 15px;
+    border-radius: 20px;
+    margin-top: 10px;
+
+    /* 💖 SOMBRA CORRIGIDA */
+    box-shadow: 
+        0 4px 12px rgba(0,0,0,0.4),
+        0 0 4px rgba(255, 105, 180, 0.15);
+}
+
+/* INPUTS */
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 12px;
+    border: none;
+    background: #3a2a3f;
+    color: white;
+}
+
+/* BOTÃO */
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #ff69b4, #ff1493);
+    color: white;
+    font-size: 16px;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: 0.2s;
+}
+
+button:active {
+    transform: scale(0.96);
+}
+
+/* SERVIÇOS */
+#servicos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.card-servico {
+    background: #3a2a3f;
+    border-radius: 15px;
+    overflow: hidden;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.card-servico img {
+    width: 100%;
+    height: 110px;
+    object-fit: cover;
+}
+
+.card-servico p {
+    margin: 8px 0;
+}
+
+.card-servico:active {
+    transform: scale(0.96);
+}
+
+.card-servico.ativo {
+    border: 2px solid #ff69b4;
+}
+
+/* HORÁRIOS */
+#horarios {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.horario {
+    padding: 12px;
+    text-align: center;
+    border-radius: 12px;
+    transition: 0.2s;
+}
+
+.horario:active {
+    transform: scale(0.9);
+}
+
+.livre {
+    background: #ff69b4;
+}
+
+.ocupado {
+    background: #ff4d6d;
+}
+
+.confirmado {
+    background: #9c27b0 !important;
+}
+
+.horario.ativo {
+    border: 2px solid white;
+}
+
+/* BANNER */
+.banner {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff69b4;
+    padding: 12px 20px;
+    border-radius: 10px;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.banner.show {
+    opacity: 1;
+}
+
+/* HISTÓRICO */
+.card-historico {
+    background: #2a1f2d;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.card-historico button {
+    margin-top: 5px;
+    background: #ff4d6d;
+}
+
+/* SOCIAL (INSTAGRAM) */
+.social {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.social a {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #feda75, #d62976, #962fbf);
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.social a:active {
+    transform: scale(0.95);
+}
+
+/* RESUMO ADMIN */
+.resumo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.box {
+    background: #2a1f2d;
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* ALERTA */
+.alerta {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #ff69b4;
+    padding: 15px;
+    border-radius: 10px;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.alerta.show {
+    opacity: 1;
+}
+
+/* 💻 DESKTOP */
+@media (min-width: 768px) {
+
+    .app {
+        max-width: 900px;
+        padding: 30px;
+    }
+
+    #servicos {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    #horarios {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    #agenda {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .horario {
+        padding: 20px;
+        font-size: 16px;
+    }
+
+    .box {
+        font-size: 18px;
+        padding: 20px;
+    }
+
+    .modal-box {
+        max-width: 400px;
+        margin: auto;
+        padding: 25px;
+        border-radius: 20px;
+        background: #2a1f2d;
+    }
+}
+
+/* ✨ efeito PC */
+.horario:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.realizado {
+    background: #4caf50 !important;
+}

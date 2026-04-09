@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lash Designer</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <h1>💖 Cynthia Lash Designer</h1>
+        <p class="user">@isabelagalvanibeauty</p>
+        <div class="social">
+            <a href="https://instagram.com/isabelagalvanibeauty" target="_blank">
+                📸 Ver Instagram
+            </a>
+        </div>
+
+        <div class="card destaque">
+            Técnica de Capping ✨<br>
+            Durabilidade +25 dias 💖
+        </div>
+
+        <div class="card">
+            <input type="text" id="nome" placeholder="Seu nome">
+            <input type="tel" id="telefone" placeholder="Telefone">
+        </div>
+
+        <div class="card">
+            <label>📅 Escolha a data</label>
+            <input type="date" id="data">
+        </div>
+
+        <div class="card">
+            <h3>💅 Serviços</h3>
+
+            <div id="servicos">
+
+                <div class="card-servico" data-servico="Volume Brasileiro" data-preco="90">
+                    <img src="./img/volume brasileiro.jpg">
+                    <p>Volume Brasileiro<br>R$90</p>
+                </div>
+
+                <div class="card-servico" data-servico="Volume Egípcio 3D" data-preco="90">
+                    <img src="./img/volume egipcio.jfif">
+                    <p>Volume Egípcio 3D<br>R$90</p>
+                </div>
+
+                <div class="card-servico" data-servico="Volume Glamour 4D" data-preco="100">
+                    <img src="./img/volume glamour.jfif">
+                    <p>Volume Glamour 4D<br>R$100</p>
+                </div>
+
+                <div class="card-servico" data-servico="Volume Luxxo" data-preco="120">
+                    <img src="./img/volume luxo.jfif">
+                    <p>Volume Luxxo<br>R$120</p>
+                </div>
+
+                <div class="card-servico" data-servico="Volume Brown" data-preco="100">
+                    <img src="./img/volume brown.jfif">
+                    <p>Volume Brown<br>R$100</p>
+                </div>
+
+                <div class="card-servico" data-servico="Volume Fox Eyes" data-preco="120">
+                    <img src="./img/volume fox eyes.jfif">
+                    <p>Fox Eyes<br>R$120</p>
+                </div>
+
+                <div class="card-servico" data-servico="Sobrancelha" data-preco="25">
+                    <img src="./img/sobrancelhas.jpg">
+                    <p>Design de Sobrancelhas<br>R$25</p>
+                </div>
+
+            </div>
+
+            <div class="card">
+                <h3>⏰ Horários</h3>
+                <div id="horarios"></div>
+            </div>
+
+            <div class="card">
+                <h3>📍 Localização</h3>
+                <p>
+                    Av. Gisele Martins 725<br>
+                    Sala 04 - Cidade Morumbi
+                </p>
+            </div>
+
+            <h2>📋 Meus Agendamentos</h2>
+            <div id="historico"></div>
+
+            <div id="banner" class="banner"></div>
+
+            <button id="agendar">Agendar horário 💖</button>
+
+        </div>
+
+        <script type="module" src="./js/script.js"></script>
+</body>
+
+</html>
