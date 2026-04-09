@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+  <div class="app">
+
+    <h1>💖 Painel Lash</h1>
+
+    <!-- RESUMO -->
+    <div class="resumo">
+      <div class="box">💰 <span id="totalDia">R$0</span><br><small>Hoje</small></div>
+      <div class="box">📋 <span id="totalAgendamentos">0</span><br><small>Atendimentos</small></div>
+      <div class="box">⏳ <span id="pendentes">0</span><br><small>Pendentes</small></div>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="loginBox">
+      <input type="password" id="senha" placeholder="Senha">
+      <button id="entrar">Entrar</button>
+    </div>
+
+    <!-- PAINEL -->
+    <div id="painel" style="display:none;">
+      <input type="date" id="data">
+      <div id="agenda"></div>
+    </div>
+
+  </div>
+
+  <!-- ALERTA -->
+  <div id="alerta" class="alerta"></div>
+
+  <!-- MODAL -->
+  <div id="modal" class="modal">
+    <div class="modal-box">
+      <h3 id="modalHora"></h3>
+      <p id="modalInfo"></p>
+
+      <button id="btnRealizado">✔ Realizado</button>
+      <button id="btnCancelar">❌ Cancelar</button>
+      <button id="btnBloquear">🔒 Bloquear</button>
+    </div>
+  </div>
+
+  <script type="module" src="./js/login.js"></script>
+</body>
+
+</html>
