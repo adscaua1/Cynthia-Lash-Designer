@@ -33,7 +33,7 @@ const telInput = document.getElementById("telefone");
 nomeInput.value = localStorage.getItem("nome") || "";
 telInput.value = localStorage.getItem("tel") || "";
 
-// data hoje (CORRIGIDO)
+// data hoje
 const hoje = new Date().toLocaleDateString("sv-SE");
 document.getElementById("data").value = hoje;
 
@@ -63,7 +63,7 @@ document.querySelectorAll(".card-servico").forEach(card => {
     };
 });
 
-// 🔹 buscar dados
+// buscar dados
 async function buscar(data) {
     const q = query(
         collection(db, "clientes", clienteId, "agendamentos"),
@@ -78,12 +78,11 @@ async function buscar(data) {
     });
 }
 
-// 🔹 render horários
+// render horários
 async function renderizar(data) {
 
     const div = document.getElementById("horarios");
 
-    // 🔥 BLOQUEIO DOMINGO E SEGUNDA
     const diaSemana = new Date(data + "T00:00:00").getDay();
     if (diaSemana === 0 || diaSemana === 1) {
         div.innerHTML = "🚫 Não atendemos neste dia";
@@ -98,7 +97,6 @@ async function renderizar(data) {
 
     let todosHorarios = [...horariosFixos];
 
-    // 🔥 adiciona horários extras
     agendamentos.forEach(a => {
         if (!todosHorarios.includes(a.hora)) {
             todosHorarios.push(a.hora);
@@ -107,7 +105,6 @@ async function renderizar(data) {
 
     todosHorarios.sort();
 
-    // 🔥 render
     todosHorarios.forEach(h => {
 
         const item = agendamentos.find(a => a.hora === h);
@@ -134,14 +131,20 @@ async function renderizar(data) {
     });
 }
 
-// 🔹 AGENDAR
+// 🔥 FUNÇÃO DE LIMPEZA (evita "�")
+function limparTexto(t) {
+    return String(t)
+        .normalize("NFC")
+        .replace(/�/g, "");
+}
+
+// AGENDAR
 document.getElementById("agendar").onclick = async () => {
 
     const nome = nomeInput.value;
     const tel = telInput.value;
     const data = document.getElementById("data").value;
 
-    // 🔥 BLOQUEIO DOMINGO E SEGUNDA
     const diaSemana = new Date(data + "T00:00:00").getDay();
     if (diaSemana === 0 || diaSemana === 1) {
         mostrarBanner("🚫 Não atendemos neste dia");
@@ -162,7 +165,7 @@ document.getElementById("agendar").onclick = async () => {
         return;
     }
 
-    // 🔥 remove horário manual
+    // remove manual
     const q = query(
         collection(db, "clientes", clienteId, "agendamentos"),
         where("data", "==", data),
@@ -179,7 +182,7 @@ document.getElementById("agendar").onclick = async () => {
         }
     }
 
-    // 🔥 cria agendamento
+    // cria agendamento
     await addDoc(
         collection(db, "clientes", clienteId, "agendamentos"),
         {
@@ -193,17 +196,27 @@ document.getElementById("agendar").onclick = async () => {
         }
     );
 
-    // whatsapp
+    // 💖 WHATSAPP CORRIGIDO (SEM BUG DE "�")
     const msg = encodeURIComponent(
         `💖 NOVO AGENDAMENTO
 
-👩 ${nome}
+👩 ${limparTexto(nome)}
 📅 ${data}
 ⏰ ${horarioSelecionado}
-💅 ${servicoSelecionado.nome}`
+ ${limparTexto(servicoSelecionado.nome)}`
     );
 
-    window.open(`https://wa.me/${numeroDono}?text=${msg}`, "_blank");
+    const urlWhats = `https://api.whatsapp.com/send?phone=${numeroDono}&text=${msg}`;
+
+    const win = window.open(urlWhats, "_blank");
+
+    if (!win) {
+        window.location.href = urlWhats;
+    }
+
+    setTimeout(() => {
+        window.location.href = urlWhats;
+    }, 300);
 
     mostrarBanner("💖 Agendamento enviado!");
 
@@ -211,7 +224,7 @@ document.getElementById("agendar").onclick = async () => {
     carregarHistorico();
 };
 
-// 🔹 HISTÓRICO
+// HISTÓRICO
 async function carregarHistorico() {
 
     const div = document.getElementById("historico");
@@ -255,7 +268,7 @@ async function carregarHistorico() {
     });
 }
 
-// 🔹 CANCELAR
+// CANCELAR
 window.cancelar = async (id) => {
     await deleteDoc(
         doc(db, "clientes", clienteId, "agendamentos", id)
