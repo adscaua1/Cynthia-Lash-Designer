@@ -10,30 +10,30 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // 🔥 CONFIG
-const clienteId = "cynthia"; // ALTERA PRA CADA CLIENTE
-const numeroDono = "5512999999999"; // ALTERA
+const clienteId = "cynthia";
+const numeroDono = "5512996879726";
 
 // horários fixos
 const horariosFixos = [
-    "08:00","09:00","10:00",
-    "11:00","12:00","13:00",
-    "14:00","15:00","16:00",
-    "17:00","18:00"
+    "07:00", "08:00", "09:00", "10:00",
+    "11:00", "12:00", "13:00",
+    "14:00", "15:00", "16:00",
+    "17:00", "18:00", "19:00"
 ];
 
 let horarioSelecionado = null;
 let servicoSelecionado = null;
-let ocupados = [];
+let agendamentos = [];
 
 // inputs
 const nomeInput = document.getElementById("nome");
 const telInput = document.getElementById("telefone");
 
-// salvar dados local
+// salvar local
 nomeInput.value = localStorage.getItem("nome") || "";
 telInput.value = localStorage.getItem("tel") || "";
 
-// data hoje
+// data hoje (CORRIGIDO)
 const hoje = new Date().toLocaleDateString("sv-SE");
 document.getElementById("data").value = hoje;
 
@@ -51,7 +51,6 @@ function mostrarBanner(msg) {
 // selecionar serviço
 document.querySelectorAll(".card-servico").forEach(card => {
     card.onclick = () => {
-
         document.querySelectorAll(".card-servico")
             .forEach(c => c.classList.remove("ativo"));
 
@@ -64,7 +63,7 @@ document.querySelectorAll(".card-servico").forEach(card => {
     };
 });
 
-// 🔹 buscar ocupados
+// 🔹 buscar dados
 async function buscar(data) {
     const q = query(
         collection(db, "clientes", clienteId, "agendamentos"),
@@ -73,25 +72,51 @@ async function buscar(data) {
 
     const snap = await getDocs(q);
 
-    ocupados = [];
-    snap.forEach(doc => ocupados.push(doc.data().hora));
+    agendamentos = [];
+    snap.forEach(doc => {
+        agendamentos.push({ id: doc.id, ...doc.data() });
+    });
 }
 
 // 🔹 render horários
 async function renderizar(data) {
+
     const div = document.getElementById("horarios");
+
+    // 🔥 BLOQUEIO DOMINGO E SEGUNDA
+    const diaSemana = new Date(data + "T00:00:00").getDay();
+    if (diaSemana === 0 || diaSemana === 1) {
+        div.innerHTML = "🚫 Não atendemos neste dia";
+        return;
+    }
+
     div.innerHTML = "⏳";
 
     await buscar(data);
 
     div.innerHTML = "";
 
-    horariosFixos.forEach(h => {
+    let todosHorarios = [...horariosFixos];
+
+    // 🔥 adiciona horários extras
+    agendamentos.forEach(a => {
+        if (!todosHorarios.includes(a.hora)) {
+            todosHorarios.push(a.hora);
+        }
+    });
+
+    todosHorarios.sort();
+
+    // 🔥 render
+    todosHorarios.forEach(h => {
+
+        const item = agendamentos.find(a => a.hora === h);
+
         const el = document.createElement("div");
         el.textContent = h;
         el.classList.add("horario");
 
-        if (ocupados.includes(h)) {
+        if (item && !item.livreManual) {
             el.classList.add("ocupado");
         } else {
             el.classList.add("livre");
@@ -111,24 +136,50 @@ async function renderizar(data) {
 
 // 🔹 AGENDAR
 document.getElementById("agendar").onclick = async () => {
+
     const nome = nomeInput.value;
     const tel = telInput.value;
     const data = document.getElementById("data").value;
+
+    // 🔥 BLOQUEIO DOMINGO E SEGUNDA
+    const diaSemana = new Date(data + "T00:00:00").getDay();
+    if (diaSemana === 0 || diaSemana === 1) {
+        mostrarBanner("🚫 Não atendemos neste dia");
+        return;
+    }
 
     if (!nome || !tel || !servicoSelecionado || !horarioSelecionado) {
         mostrarBanner("⚠️ Preencha tudo!");
         return;
     }
 
-    if (ocupados.includes(horarioSelecionado)) {
+    const ocupado = agendamentos.find(
+        a => a.hora === horarioSelecionado && !a.livreManual
+    );
+
+    if (ocupado) {
         mostrarBanner("❌ Horário ocupado!");
         return;
     }
 
-    // salvar local
-    localStorage.setItem("nome", nome);
-    localStorage.setItem("tel", tel);
+    // 🔥 remove horário manual
+    const q = query(
+        collection(db, "clientes", clienteId, "agendamentos"),
+        where("data", "==", data),
+        where("hora", "==", horarioSelecionado)
+    );
 
+    const snap = await getDocs(q);
+
+    for (const d of snap.docs) {
+        if (d.data().livreManual) {
+            await deleteDoc(
+                doc(db, "clientes", clienteId, "agendamentos", d.id)
+            );
+        }
+    }
+
+    // 🔥 cria agendamento
     await addDoc(
         collection(db, "clientes", clienteId, "agendamentos"),
         {
@@ -142,17 +193,14 @@ document.getElementById("agendar").onclick = async () => {
         }
     );
 
-    // mensagem whatsapp
+    // whatsapp
     const msg = encodeURIComponent(
         `💖 NOVO AGENDAMENTO
 
-👩 Cliente: ${nome}
-📞 Telefone: ${tel}
-
-📅 Data: ${data}
-⏰ Hora: ${horarioSelecionado}
-💅 Serviço: ${servicoSelecionado.nome}
-💰 Valor: R$${servicoSelecionado.preco}`
+👩 ${nome}
+📅 ${data}
+⏰ ${horarioSelecionado}
+💅 ${servicoSelecionado.nome}`
     );
 
     window.open(`https://wa.me/${numeroDono}?text=${msg}`, "_blank");
@@ -165,6 +213,7 @@ document.getElementById("agendar").onclick = async () => {
 
 // 🔹 HISTÓRICO
 async function carregarHistorico() {
+
     const div = document.getElementById("historico");
     div.innerHTML = "⏳";
 
@@ -226,27 +275,3 @@ document.getElementById("data").addEventListener("change", e => {
 // iniciar
 renderizar(hoje);
 carregarHistorico();
-
-// 🔥 TEMPO REAL
-function escutar() {
-    const data = document.getElementById("data").value;
-
-    const q = query(
-        collection(db, "clientes", clienteId, "agendamentos"),
-        where("data", "==", data)
-    );
-
-    onSnapshot(q, (snap) => {
-
-        if (!primeiraCarga && snap.docChanges().length > 0) {
-            mostrarAlerta("🔔 Novo agendamento!");
-        }
-
-        primeiraCarga = false;
-
-        agendamentos = [];
-        snap.forEach(d => agendamentos.push({ id: d.id, ...d.data() }));
-
-        renderizar();
-    });
-}

@@ -4,13 +4,15 @@
     box-sizing: border-box;
 }
 
+/* BODY */
 body {
     margin: 0;
-    background: linear-gradient(135deg, #1a1a1a, #2a1f2d);
+    background: linear-gradient(135deg, #000000, #1a1a1a);
     color: #fff;
     font-family: 'Segoe UI', sans-serif;
 }
 
+/* APP */
 .app {
     max-width: 420px;
     margin: auto;
@@ -20,7 +22,7 @@ body {
 /* TITULOS */
 h1 {
     text-align: center;
-    color: #ffb6c1;
+    color: #d4af37;
 }
 
 .user {
@@ -31,32 +33,32 @@ h1 {
 
 .destaque {
     text-align: center;
-    color: #ffb6c1;
+    color: #d4af37;
     font-weight: bold;
 }
 
 /* CARD PADRÃO */
 .card {
-    background: #2a1f2d;
+    background: #111;
     padding: 15px;
     border-radius: 20px;
     margin-top: 10px;
 
-    /* 💖 SOMBRA CORRIGIDA */
-    box-shadow: 
-        0 4px 12px rgba(0,0,0,0.4),
-        0 0 4px rgba(255, 105, 180, 0.15);
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.6),
+        0 0 6px rgba(212, 175, 55, 0.2);
 }
 
-/* INPUTS */
+/* INPUT */
 input {
     width: 100%;
     padding: 12px;
     margin-top: 10px;
     border-radius: 12px;
     border: none;
-    background: #3a2a3f;
+    background: #1a1a1a;
     color: white;
+    outline: none;
 }
 
 /* BOTÃO */
@@ -66,16 +68,35 @@ button {
     margin-top: 15px;
     border: none;
     border-radius: 20px;
-    background: linear-gradient(45deg, #ff69b4, #ff1493);
-    color: white;
+    background: linear-gradient(45deg, #b8860b, #ffd700);
+    color: black;
     font-size: 16px;
+    cursor: pointer;
 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     transition: 0.2s;
 }
 
 button:active {
     transform: scale(0.96);
+}
+
+/* =========================
+   IMAGENS PADRÃO (CORREÇÃO PRINCIPAL)
+========================= */
+
+/* global seguro */
+img {
+    width: 100%;
+    display: block;
+}
+
+/* serviço: PADRÃO FIXO (resolve seu problema da imagem diferente) */
+.card-servico img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    object-position: center;
 }
 
 /* SERVIÇOS */
@@ -86,18 +107,12 @@ button:active {
 }
 
 .card-servico {
-    background: #3a2a3f;
+    background: #1a1a1a;
     border-radius: 15px;
     overflow: hidden;
     text-align: center;
     cursor: pointer;
     transition: 0.2s;
-}
-
-.card-servico img {
-    width: 100%;
-    height: 110px;
-    object-fit: cover;
 }
 
 .card-servico p {
@@ -109,7 +124,7 @@ button:active {
 }
 
 .card-servico.ativo {
-    border: 2px solid #ff69b4;
+    border: 2px solid #d4af37;
 }
 
 /* HORÁRIOS */
@@ -126,24 +141,21 @@ button:active {
     transition: 0.2s;
 }
 
-.horario:active {
-    transform: scale(0.9);
-}
-
 .livre {
-    background: #ff69b4;
+    background: #d4af37;
+    color: black;
 }
 
 .ocupado {
-    background: #ff4d6d;
+    background: #555;
 }
 
 .confirmado {
-    background: #9c27b0 !important;
+    background: #b8860b !important;
 }
 
 .horario.ativo {
-    border: 2px solid white;
+    border: 2px solid #fff;
 }
 
 /* BANNER */
@@ -152,7 +164,8 @@ button:active {
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: #ff69b4;
+    background: #d4af37;
+    color: black;
     padding: 12px 20px;
     border-radius: 10px;
     opacity: 0;
@@ -165,20 +178,21 @@ button:active {
 
 /* HISTÓRICO */
 .card-historico {
-    background: #2a1f2d;
+    background: #111;
     padding: 10px;
     border-radius: 10px;
     margin-top: 10px;
 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .card-historico button {
     margin-top: 5px;
-    background: #ff4d6d;
+    background: #b8860b;
+    color: black;
 }
 
-/* SOCIAL (INSTAGRAM) */
+/* SOCIAL */
 .social {
     text-align: center;
     margin-bottom: 10px;
@@ -188,7 +202,7 @@ button:active {
     display: inline-block;
     padding: 10px 20px;
     border-radius: 20px;
-    background: linear-gradient(45deg, #feda75, #d62976, #962fbf);
+    background: linear-gradient(45deg, #000, #d4af37);
     color: white;
     text-decoration: none;
     font-size: 14px;
@@ -199,7 +213,7 @@ button:active {
     transform: scale(0.95);
 }
 
-/* RESUMO ADMIN */
+/* RESUMO */
 .resumo {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -208,12 +222,12 @@ button:active {
 }
 
 .box {
-    background: #2a1f2d;
+    background: #111;
     padding: 15px;
     border-radius: 15px;
     text-align: center;
 
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 /* ALERTA */
@@ -221,7 +235,8 @@ button:active {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: #ff69b4;
+    background: #d4af37;
+    color: black;
     padding: 15px;
     border-radius: 10px;
     opacity: 0;
@@ -232,54 +247,67 @@ button:active {
     opacity: 1;
 }
 
-/* 💻 DESKTOP */
-@media (min-width: 768px) {
+/* MANUTENÇÃO */
+#menu-manutencao {
+    margin-top: 10px;
+    padding: 15px;
+    background: #111;
+    border-radius: 20px;
 
-    .app {
-        max-width: 900px;
-        padding: 30px;
-    }
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.6),
+        0 0 4px rgba(212, 175, 55, 0.2);
 
-    #servicos {
-        grid-template-columns: repeat(3, 1fr);
-    }
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
 
-    #horarios {
-        grid-template-columns: repeat(6, 1fr);
-    }
-
-    #agenda {
-        display: grid;
-        grid-template-columns: repeat(6, 1fr);
-        gap: 10px;
-        margin-top: 10px;
-    }
-
-    .horario {
-        padding: 20px;
-        font-size: 16px;
-    }
-
-    .box {
-        font-size: 18px;
-        padding: 20px;
-    }
-
-    .modal-box {
-        max-width: 400px;
-        margin: auto;
-        padding: 25px;
-        border-radius: 20px;
-        background: #2a1f2d;
-    }
+    animation: aparecer 0.3s ease;
 }
 
-/* ✨ efeito PC */
-.horario:hover {
-    transform: scale(1.05);
+.hidden {
+    display: none;
+}
+
+/* CARDS MANUTENÇÃO */
+.card-manutencao {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 8px;
+    text-align: center;
+    font-size: 12px;
     cursor: pointer;
+    transition: 0.2s;
 }
 
-.realizado {
-    background: #4caf50 !important;
+.card-manutencao h4 {
+    font-size: 13px;
+    color: #d4af37;
+    margin-bottom: 4px;
+}
+
+.card-manutencao span {
+    font-size: 10px;
+    color: #ccc;
+}
+
+.card-manutencao.ativo {
+    border: 2px solid #d4af37;
+}
+
+.card-manutencao:active {
+    transform: scale(0.95);
+}
+
+/* ANIMAÇÃO */
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

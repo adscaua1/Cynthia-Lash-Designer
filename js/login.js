@@ -14,10 +14,10 @@ const clienteId = "cynthia";
 const senhaCorreta = "1234";
 
 const horariosFixos = [
-    "08:00", "09:00", "10:00",
+    "07:00", "08:00", "09:00", "10:00",
     "11:00", "12:00", "13:00",
     "14:00", "15:00", "16:00",
-    "17:00", "18:00"
+    "17:00", "18:00", "19:00",
 ];
 
 let agendamentos = [];
@@ -72,6 +72,10 @@ function renderizar() {
     let pendentes = 0;
 
     agendamentos.forEach(a => {
+
+        // 🔥 IGNORA horários manuais
+        if (a.livreManual) return;
+
         if (!a.bloqueado) {
             totalAtendimentos++;
 
@@ -85,14 +89,27 @@ function renderizar() {
     document.getElementById("totalAgendamentos").textContent = totalAtendimentos;
     document.getElementById("pendentes").textContent = pendentes;
 
-    horariosFixos.forEach(hora => {
+    // 🔥 JUNTA HORÁRIOS FIXOS + NOVOS
+    let todosHorarios = [...horariosFixos];
+
+    agendamentos.forEach(a => {
+        if (!todosHorarios.includes(a.hora)) {
+            todosHorarios.push(a.hora);
+        }
+    });
+
+    // ordena
+    todosHorarios.sort();
+
+    // 🔥 RENDERIZA
+    todosHorarios.forEach(hora => {
 
         const item = agendamentos.find(a => a.hora === hora);
 
         const div = document.createElement("div");
         div.classList.add("horario");
 
-        if (item) {
+        if (item && !item.livreManual) {
             if (item.bloqueado) {
                 div.classList.add("ocupado");
                 div.innerHTML = `${hora} 🔒`;
@@ -103,8 +120,9 @@ function renderizar() {
                     div.classList.add("realizado");
                 }
 
-                div.innerHTML = `${hora}<br>${item.nome}`;
+                div.innerHTML = `${hora}<br>${item.nome || ""}`;
             }
+
         } else {
             div.classList.add("livre");
             div.innerHTML = hora;
@@ -204,3 +222,37 @@ document.getElementById("btnBloquear").onclick = async () => {
 
 // mudar data
 document.getElementById("data").addEventListener("change", escutar);
+
+document.getElementById("btnAddHora").onclick = async () => {
+
+    const data = document.getElementById("data").value;
+
+    const novaHora = prompt("Digite o novo horário (ex: 08:30)");
+
+    if (!novaHora) return;
+
+    const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+
+    if (!regex.test(novaHora)) {
+        alert("Formato inválido! Use 08:30");
+        return;
+    }
+
+    const jaExiste = agendamentos.find(a => a.hora === novaHora);
+
+    if (jaExiste) {
+        alert("Esse horário já existe!");
+        return;
+    }
+
+    await addDoc(
+        collection(db, "clientes", clienteId, "agendamentos"),
+        {
+            data,
+            hora: novaHora,
+            livreManual: true
+        }
+    );
+
+    document.getElementById("modal").style.display = "none";
+};
