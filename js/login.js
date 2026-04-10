@@ -35,10 +35,12 @@ document.getElementById("entrar").onclick = () => {
         document.getElementById("loginBox").style.display = "none";
         document.getElementById("painel").style.display = "block";
         escutar();
+    } else {
+        alert("Senha incorreta!");
     }
 };
 
-// 🔥 TEMPO REAL
+// TEMPO REAL
 function escutar() {
     const data = document.getElementById("data").value;
 
@@ -62,7 +64,7 @@ function escutar() {
     });
 }
 
-// 🔥 RENDER
+// RENDER
 function renderizar() {
     const agenda = document.getElementById("agenda");
     agenda.innerHTML = "";
@@ -72,8 +74,6 @@ function renderizar() {
     let pendentes = 0;
 
     agendamentos.forEach(a => {
-
-        // 🔥 IGNORA horários manuais
         if (a.livreManual) return;
 
         if (!a.bloqueado) {
@@ -89,7 +89,6 @@ function renderizar() {
     document.getElementById("totalAgendamentos").textContent = totalAtendimentos;
     document.getElementById("pendentes").textContent = pendentes;
 
-    // 🔥 JUNTA HORÁRIOS FIXOS + NOVOS
     let todosHorarios = [...horariosFixos];
 
     agendamentos.forEach(a => {
@@ -98,10 +97,8 @@ function renderizar() {
         }
     });
 
-    // ordena
     todosHorarios.sort();
 
-    // 🔥 RENDERIZA
     todosHorarios.forEach(hora => {
 
         const item = agendamentos.find(a => a.hora === hora);
@@ -128,13 +125,23 @@ function renderizar() {
             div.innerHTML = hora;
         }
 
-        div.onclick = () => abrirModal(hora, item);
+        // 🔥 CORREÇÃO PRINCIPAL AQUI
+        div.onclick = () => {
+
+            document.querySelectorAll(".horario").forEach(h => {
+                h.classList.remove("selecionado");
+            });
+
+            div.classList.add("selecionado");
+
+            abrirModal(hora, item);
+        };
 
         agenda.appendChild(div);
     });
 }
 
-// 🔥 MODAL
+// MODAL
 function abrirModal(hora, item) {
     selecionado = item;
     horaSelecionada = hora;
@@ -156,7 +163,7 @@ function abrirModal(hora, item) {
         item && item.bloqueado ? "🔓 Desbloquear" : "🔒 Bloquear";
 }
 
-// fechar modal clicando fora
+// fechar modal
 window.addEventListener("click", (e) => {
     const modal = document.getElementById("modal");
     if (e.target === modal) {
@@ -164,7 +171,7 @@ window.addEventListener("click", (e) => {
     }
 });
 
-// 🔥 ALERTA
+// ALERTA
 function mostrarAlerta(msg) {
     const el = document.getElementById("alerta");
     el.textContent = msg;
@@ -175,7 +182,7 @@ function mostrarAlerta(msg) {
     }, 3000);
 }
 
-// 🔥 REALIZADO
+// REALIZADO
 document.getElementById("btnRealizado").onclick = async () => {
     if (!selecionado) return;
 
@@ -187,7 +194,7 @@ document.getElementById("btnRealizado").onclick = async () => {
     document.getElementById("modal").style.display = "none";
 };
 
-// 🔥 CANCELAR
+// CANCELAR
 document.getElementById("btnCancelar").onclick = async () => {
     if (!selecionado) return;
 
@@ -198,7 +205,7 @@ document.getElementById("btnCancelar").onclick = async () => {
     document.getElementById("modal").style.display = "none";
 };
 
-// 🔥 BLOQUEAR
+// BLOQUEAR
 document.getElementById("btnBloquear").onclick = async () => {
     const data = document.getElementById("data").value;
 
@@ -223,36 +230,54 @@ document.getElementById("btnBloquear").onclick = async () => {
 // mudar data
 document.getElementById("data").addEventListener("change", escutar);
 
+// 🔥 ADD HORÁRIO (FALTAVA ISSO)
 document.getElementById("btnAddHora").onclick = async () => {
 
+    console.log("🔥 clicou add horário");
+
     const data = document.getElementById("data").value;
+
+    if (!data) {
+        alert("Escolha uma data primeiro!");
+        return;
+    }
 
     const novaHora = prompt("Digite o novo horário (ex: 08:30)");
 
     if (!novaHora) return;
 
+    const horaFormatada = novaHora.trim();
+
     const regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
-    if (!regex.test(novaHora)) {
+    if (!regex.test(horaFormatada)) {
         alert("Formato inválido! Use 08:30");
         return;
     }
 
-    const jaExiste = agendamentos.find(a => a.hora === novaHora);
+    const jaExiste = agendamentos.find(a => a.hora === horaFormatada);
 
     if (jaExiste) {
         alert("Esse horário já existe!");
         return;
     }
 
-    await addDoc(
-        collection(db, "clientes", clienteId, "agendamentos"),
-        {
-            data,
-            hora: novaHora,
-            livreManual: true
-        }
-    );
+    try {
+        await addDoc(
+            collection(db, "clientes", clienteId, "agendamentos"),
+            {
+                data,
+                hora: horaFormatada,
+                livreManual: true
+            }
+        );
 
-    document.getElementById("modal").style.display = "none";
+        console.log("✅ salvo no firebase");
+
+        document.getElementById("modal").style.display = "none";
+
+    } catch (erro) {
+        console.error("❌ erro:", erro);
+        alert("Erro ao salvar!");
+    }
 };

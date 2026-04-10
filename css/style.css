@@ -311,3 +311,69 @@ img {
         transform: translateY(0);
     }
 }
+
+.horario {
+    cursor: pointer;
+    user-select: none;
+    min-height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-weight: bold;
+    transition: 0.15s;
+}
+
+.horario:active {
+    transform: scale(0.9);
+}
+
+.horario.selecionado {
+    border: 3px solid #ffd700;
+    box-shadow: 0 0 12px #ffd700;
+}
+
+.livre:hover {
+    background: #ffd700;
+}
+
+.ocupado:hover {
+    background: #777;
+}
+
+/* horário realizado */
+.horario.realizado {
+    background: #28a745 !important;
+    /* verde */
+    color: white;
+    text-decoration: line-through;
+}
+
+/* hover mais bonito */
+.horario.realizado:hover {
+    background: #34d058 !important;
+}
+
+/* =========================
+   CORREÇÃO ZOOM MOBILE
+========================= */
+
+html {
+    font-size: 16px;
+}
+
+/* evita zoom automático ao clicar */
+input,
+button {
+    font-size: 16px;
+}
+
+/* horários também (principal causa do bug) */
+.horario {
+    font-size: 16px;
+}
+
+/* melhora toque sem bloquear zoom */
+body {
+    touch-action: manipulation;
+}
